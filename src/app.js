@@ -6,7 +6,7 @@ import productRouter from './router/products.router.js'
 import messageRouter from './router/message.router.js'
 
 const PORT = 8080 
-const MONGO = 'mongodb+srv://ramirolagrenade:8MI6v3LKbJK12lLw@ecommerce.24fvet8.mongodb.net/?retryWrites=true&w=majority' 
+const MONGO = 'mongodb+srv://ramirolagrenade:8MI6v3LKbJK12lLw@ecommerce.24fvet8.mongodb.net/rl' 
 
 const app = express() 
 
@@ -15,8 +15,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 app.use('/api/carts', cartRouter)
-app.use('/api/products', productRouter)
 app.use('/api/chat', messageRouter)
+app.use('/api/products', productRouter)
 
 
 app.listen(PORT, ()=>{
