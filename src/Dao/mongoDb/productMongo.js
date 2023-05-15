@@ -75,7 +75,7 @@ export default class ProductMongo {
 
     updateProduct = async (IdProducto, data) => {
         try {
-            const product = await productModel.updateOne({_id : IdProducto}, {data})
+            const product = await productModel.updateOne({_id : IdProducto}, {$set: data})
 
             return {
                 code: 200,
