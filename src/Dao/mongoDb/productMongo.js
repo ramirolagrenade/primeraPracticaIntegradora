@@ -4,12 +4,12 @@ export default class ProductMongo {
 
     getProducts = async () => {
 
-        const carts = await productModel.find()
+        const product = await productModel.find()
 
         return {
             code: 202,
             status: 'Success',
-            message: carts
+            message: product
         }
     }
 

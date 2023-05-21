@@ -1,4 +1,5 @@
 import express from 'express' 
+import handlebars from 'express-handlebars'
 import __dirname from './utils.js' 
 import mongoose from 'mongoose'
 import cartRouter from './router/carts.router.js'
@@ -11,8 +12,13 @@ const MONGO = 'mongodb+srv://ramirolagrenade:8MI6v3LKbJK12lLw@ecommerce.24fvet8.
 const app = express() 
 
 const connection = mongoose.connect(MONGO) 
+
 app.use(express.json()) 
 app.use(express.urlencoded({extended:true}))
+
+app.engine("handlebars",handlebars.engine())
+app.set("views", __dirname + "/views")
+app.set("view engine", "handlebars")
 
 app.use('/api/carts', cartRouter)
 app.use('/api/chat', messageRouter)
