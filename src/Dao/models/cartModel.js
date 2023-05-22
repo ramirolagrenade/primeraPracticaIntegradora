@@ -12,9 +12,13 @@ const cartSchema = new mongoose.Schema({
                 },
                 stock: Number
             }
-        ]
-    },
-    default: []
+        ],
+        default: []
+    }
+})
+
+cartSchema.pre('find', function(){
+    this.populate("products.product");
 })
 
 const cartModel = mongoose.model(collection, cartSchema)

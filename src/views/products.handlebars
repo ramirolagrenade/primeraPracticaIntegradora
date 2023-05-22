@@ -1,6 +1,6 @@
 <div>
     {{#each products}}
-        <p> {{this.title}}: {{this.price}}$ </p>
+        <p> {{this.title}}: {{this.price}}$----ID:{{this._id}}----<button>Añadir al carrito</button></p>
     {{/each}}
     {{#if hasPrevPage}}
         <a href="/api/products?page={{prevPage}}{{#if sort}}&sort={{sort}}{{/if}}{{#if query}}&query={{query}}{{/if}}{{#if stock}}&stock={{stock}}{{/if}}"><button>Anterior</button></a>

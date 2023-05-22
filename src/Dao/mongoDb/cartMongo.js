@@ -6,9 +6,9 @@ export default class CartMongo {
     //     this.path = path 
     // }
 
-    async addCart() {
+    async addCart(newCart) {
 
-        const cart = await cartModel.create({})
+        const cart = await cartModel.create(newCart)
 
         return {
             code: 202,
@@ -22,45 +22,35 @@ export default class CartMongo {
 
         const cart = await cartModel.findOne({ _id: cid })
 
-        if (!cart) {
-            return {
-                code: 400,
-                status: 'Error',
-                message: 'No se ha encontrado un cart con ese ID'
-            }
-        }
-
         return {
-            code: 202,
-            status: 'Success',
-            message: cart.products
+            cart
         }
     }
 
-    async updateCart(cid, pid) {
-
-        const cart = await cartModel.findOne({ _id: cid })
-
-        const prodIndex = cart.products.findIndex(i => i._id === pid)
-
-        if (prodIndex === -1) {
-            const product = {
-                _id: pid,
-                quantity: 1
-            }
-            cart.products.push(product)
-        }
-        else {
-            let total = cart.products[prodIndex].quantity
-            cart.products[prodIndex].quantity = total + 1
-        }
+    async updateCart(cid, cart) {
 
         const result = await cartModel.updateOne({ _id: cid }, { $set: cart })
 
         return {
             code: 202,
             status: 'Success',
-            message: cart.products
+            message: result
+        }
+
+    }
+
+    async updateStock(cid, pid, stockUp) {
+
+        const cart = await cartModel.find({ $and: [{ products: cid }, { product: pid }] })
+
+        cart.stock = stockUp
+
+        const result = await cartModel.updateOne({ _id: cid }, { $set: cart })
+
+        return {
+            code: 202,
+            status: 'Success',
+            message: result
         }
 
     }
@@ -68,6 +58,16 @@ export default class CartMongo {
     async getCarts() {
 
         const carts = await cartModel.find()
+
+        return {
+            code: 202,
+            status: 'Success',
+            message: carts
+        }
+    }
+
+    async deleteCarts(id) {
+        const carts = await cartModel.deleteOne({ _id: id })
 
         return {
             code: 202,
