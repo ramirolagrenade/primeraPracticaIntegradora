@@ -6,18 +6,15 @@ const router = Router()
 const cartMongo = new CartMongo()
 
 router.post('/', async (req, res) => {
-    const pid = req.query.pid
-
-
-    const newCart = {products: []}
+    const newCart = { products: [] }
 
     const result = await cartMongo.addCart(newCart)
 
     res.status(result.code).send({
-            status: result.status,
-            message: result.message
-        })
+        status: result.status,
+        message: result.message
     })
+})
 
 router.post('/:cid/product/:pid', async (req, res) => {
     const cid = req.params.cid

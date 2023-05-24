@@ -27,15 +27,45 @@ export default class CartMongo {
         }
     }
 
-    async updateCart(cid, cart) {
+    async updateCart(cid, pid) {
+        const findCart = await cartModel.findOne({_id : cid})
+        console.log(findCart)
+        if(findCart){
+            const findProduct = await cartModel.find({ $and: [{ _id: cid }, { product: pid }] })
+            console.log(findProduct)
+            if(findProduct){
+                const newStock = findCart.stock + 1
+                const result = await cartModel.updateOne({$and: [{_id : cid},{product : pid}]},{$set: {stock: newStock}})
+                return {
+                    code: 400,
+                    status: 'Success',
+                    message: result
+                }
+            }
+            else{
+                const result1= await cartModel.updateOne({cid:_id},{$set: {stock: 1}})
+                const result= await cartModel.updateOne({cid:_id},{$set: {product: pid}})
 
-        const result = await cartModel.updateOne({ _id: cid }, { $set: cart })
-
-        return {
-            code: 202,
-            status: 'Success',
-            message: result
+                return {
+                    code: 400,
+                    status: 'Success',
+                    message: result
+                }
+            }
         }
+        else{
+            return {
+                code: 400,
+                status: 'Success',
+                message: 'Id del carrito No encontrado.'
+            }
+        }
+
+        // return {
+        //     code: 202,
+        //     status: 'Success',
+        //     message: result
+        // }
 
     }
 
