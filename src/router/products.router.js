@@ -10,20 +10,32 @@ router.get('/', async (req, res) => {
 
     // const result = await productMongo.getProducts()
 
-    const {page = 1} = req.query
+    const { page = 1 } = req.query
     //pongo 5 en limit en vez de 10 debido a que no carge tantos productos!!!!!!!!!!!!!.
-    const {limit = 5}= req.query
-    const {sort =-1}= req.query
-    const {query}= req.query
-    const {stock} = req.query
+    const { limit = 5 } = req.query
+    const { sort = 0} = req.query
+    const { query } = req.query
+    const { stock } = req.query
 
-    if(query){
+    if (query) {
 
-        const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } = await productModel.paginate({category : query},{limit, sort: {price:sort} , page , lean: true})
+        const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages } = await productModel.paginate({ category: query }, { limit, sort: { price: sort }, page, lean: true })
 
         const products = docs
 
-        res.render('products',{
+        if (page > totalPages || page < 1) {
+            res.status(404).send({
+                status: 'Error, Pagina no encontrada'
+            })
+        }
+
+        if(!parseInt(page)){
+            res.status(404).send({
+                status: 'Error, Pagina no encontrada'
+            })
+        }
+
+        res.render('products', {
             products,
             hasPrevPage,
             hasNextPage,
@@ -33,12 +45,24 @@ router.get('/', async (req, res) => {
             query
         })
 
-    }else if(stock){
-        const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } = await productModel.paginate({stock : stock},{limit, sort: {price:sort} , page , lean: true})
+    } else if (stock) {
+        const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages } = await productModel.paginate({ stock: stock }, { limit, sort: { price: sort }, page, lean: true })
 
         const products = docs
 
-        res.render('products',{
+        if (page > totalPages || page < 1) {
+            res.status(404).send({
+                status: 'Error, Pagina no encontrada'
+            })
+        }
+
+        if(!parseInt(page)){
+            res.status(404).send({
+                status: 'Error, Pagina no encontrada'
+            })
+        }
+
+        res.render('products', {
             products,
             hasPrevPage,
             hasNextPage,
@@ -48,13 +72,25 @@ router.get('/', async (req, res) => {
             stock
         })
     }
-    else{
+    else {
 
-        const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } = await productModel.paginate({},{limit, sort: {price:sort} , page , lean: true})
+        const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalPages } = await productModel.paginate({}, { limit, sort: { price: sort }, page, lean: true })
 
         const products = docs
 
-        res.render('products',{
+        if (page > totalPages || page < 1) {
+            res.status(404).send({
+                status: 'Error, Pagina no encontrada'
+            })
+        }
+
+        if(!parseInt(page)){
+            res.status(404).send({
+                status: 'Error, Pagina no encontrada'
+            })
+        }
+
+        res.render('products', {
             products,
             hasPrevPage,
             hasNextPage,
