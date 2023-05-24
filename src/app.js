@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import cartRouter from './router/carts.router.js'
 import productRouter from './router/products.router.js'
 import messageRouter from './router/message.router.js'
+import viewRouter from './router/router.views.js'
 
 const PORT = 8080 
 const MONGO = 'mongodb+srv://ramirolagrenade:8MI6v3LKbJK12lLw@ecommerce.24fvet8.mongodb.net/rl' 
@@ -20,9 +21,10 @@ app.engine("handlebars",handlebars.engine())
 app.set("views", __dirname + "/views")
 app.set("view engine", "handlebars")
 
-app.use('/api/carts', cartRouter)
-app.use('/api/chat', messageRouter)
-app.use('/api/products', productRouter)
+app.use('/', viewRouter)
+app.use('/carts', cartRouter)
+app.use('/chat', messageRouter)
+app.use('/products', productRouter)
 
 
 app.listen(PORT, ()=>{

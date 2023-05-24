@@ -5,20 +5,19 @@ import cartModel from '../Dao/models/cartModel.js'
 const router = Router()
 const cartMongo = new CartMongo()
 
-router.post('/pid', async (req, res) => {
+router.post('/', async (req, res) => {
     const pid = req.query.pid
 
-    const newCart =[{
-        product : pid,
-        stock : 1
-    }]
+
+    const newCart = {products: []}
+
     const result = await cartMongo.addCart(newCart)
 
     res.status(result.code).send({
-        status: result.status,
-        message: result.message
+            status: result.status,
+            message: result.message
+        })
     })
-})
 
 router.post('/:cid/product/:pid', async (req, res) => {
     const cid = req.params.cid
@@ -42,17 +41,8 @@ router.get('/', async (req, res) => {
     })
 })
 
-router.get('/:cid', async (req, res) => {
-    const cid = req.params.cid
 
-    const carts = await cartMongo.getCart(cid)
-
-    res.render('carts',{
-        carts
-    })
-})
-
-router.delete ('/:cid', async (req, res) => {
+router.delete('/:cid', async (req, res) => {
     const cid = req.params.cid
 
     const result = await cartMongo.deleteCarts(cid)
@@ -62,14 +52,14 @@ router.delete ('/:cid', async (req, res) => {
         message: result.message
     })
 })
-
-router.delete ('/:cid/products/:pid', async (req, res) => {
+///////////////////////////////////////////
+router.delete('/:cid/products/:pid', async (req, res) => {
     const cid = req.params.cid
     const pid = req.params.pid
 
-    const carrito = await cartModel.find({$and:[{products : cid},{ product : pid }]})
+    const carrito = await cartModel.find({ $and: [{ products: cid }, { product: pid }] })
 
-    const result =await cartMongo.deleteCarts(carrito._id)
+    const result = await cartMongo.deleteCarts(carrito._id)
 
     res.status(result.code).send({
         status: result.status,
@@ -80,7 +70,7 @@ router.delete ('/:cid/products/:pid', async (req, res) => {
 router.put('/:cid', async (req, res) => {
     const cid = req.params.cid
 
-    const {product, stock} = req.body
+    const { product, stock } = req.body
 
     if (!product || !stock) {
         return res.status(400).send({
@@ -107,8 +97,8 @@ router.put('/:cid/products/:pid', async (req, res) => {
 
     const stockUp = req.body
 
-    const result = await cartMongo.updateStock(cid,pid,stockUp)
-    
+    const result = await cartMongo.updateStock(cid, pid, stockUp)
+
     res.status(result.code).send({
         status: result.status,
         message: result.message

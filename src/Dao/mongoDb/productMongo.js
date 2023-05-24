@@ -75,7 +75,7 @@ export default class ProductMongo {
 
     updateProduct = async (IdProducto, data) => {
         try {
-            const product = await productModel.updateOne({_id : IdProducto}, {$set: data})
+            const product = await productModel.updateOne({ _id: IdProducto }, { $set: data })
 
             return {
                 code: 200,
@@ -89,5 +89,33 @@ export default class ProductMongo {
                 message: 'No actualizado'
             }
         }
+    }
+
+    getPaginate = async (options) => {
+        const { limit = 10, page = 1, sort, category, stock } = options
+        const filter = {}
+        if (category) {
+            filter.category = category
+        }
+        if (stock) {
+            filter.stock = stock
+        }
+        const { docs,
+            hasPrevPage,
+            hasNextPage,
+            nextPage,
+            prevPage,
+            totalPages } = await productModel.paginate(filter, { limit, sort: { price: sort }, page, lean: true })
+
+        return {
+            products: docs,
+            hasPrevPage: hasPrevPage,
+            hasNextPage: hasNextPage,
+            nextPage: nextPage,
+            prevPage: prevPage,
+            totalPages: totalPages,
+            page: page
+        }
+
     }
 }
