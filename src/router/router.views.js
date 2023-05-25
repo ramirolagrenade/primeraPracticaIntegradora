@@ -23,13 +23,15 @@ router.get('/products', async (req, res) => {
 
     if (page > totalPages || page < 1) {
         res.status(404).send({
-            status: 'Error, Pagina no encontrada'
+            status: Error,
+            menssage: 'Pagina no encontrada'
         })
     }
 
     if (!parseInt(page)) {
         res.status(404).send({
-            status: 'Error, Pagina no encontrada'
+            status: Error,
+            menssage: 'Pagina no encontrada'
         })
     }
 
